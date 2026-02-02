@@ -1,0 +1,19 @@
+{
+    "predicted_breed": "Gir",
+    "confidence": 98.5,
+    "top_3": [
+        {
+            "breed": "Gir",
+            "confidence": 98.5
+        },
+        {
+            "breed": "Sahiwal",
+            "confidence": 1.2
+        },
+        {
+            "breed": "Red Sindhi",
+            "confidence": 0.3
+        }
+    ],
+    "heatmap": "data:image/jpeg;base64,...(base64 encoded image data)..."
+}
