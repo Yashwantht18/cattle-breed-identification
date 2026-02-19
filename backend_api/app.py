@@ -7,6 +7,7 @@ sys.path.append(root_path)
 
 from inference.tflite_inference import TFLiteBovineClassifier
 from explainability.tf_gradcam import TFGradCAM, apply_heatmap
+from gatekeeper.gatekeeper import ImageNetGatekeeper
 
 import io
 import base64
@@ -32,9 +33,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 classifier = None
 gradcam = None
+gatekeeper = None
 
 def get_classifier():
-    global classifier, gradcam
+    global classifier, gradcam, gatekeeper
     if classifier is None:
         classifier = TFLiteBovineClassifier(
             model_path=MODEL_TFLITE_PATH, 
@@ -49,8 +51,16 @@ def get_classifier():
             gradcam = TFGradCAM(MODEL_KERAS_PATH)
         except Exception as e:
             print(f"Failed to load Grad-CAM model: {e}")
+
+    # Initialize gatekeeper (lazy load, fail-open)
+    if gatekeeper is None:
+        try:
+            gatekeeper = ImageNetGatekeeper()
+        except Exception as e:
+            print(f"[WARNING] Gatekeeper failed to initialize: {e}")
+            gatekeeper = None
             
-    return classifier, gradcam
+    return classifier, gradcam, gatekeeper
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -80,9 +90,26 @@ def predict():
         return jsonify({"error": "No image provided"}), 400
     
     try:
-        clf, gc = get_classifier()
+        clf, gc, gk = get_classifier()
+
+        # ── GATEKEEPER CHECK ──────────────────────────────────────────────
+        # Run before breed inference. Fail-open: if gk is None, skip check.
+        if gk is not None:
+            gate_result = gk.check(img_path)
+            print(f"[Gatekeeper] result={gate_result}")
+            if not gate_result["is_bovine"]:
+                return jsonify({
+                    "is_bovine": False,
+                    "predicted_breed": None,
+                    "confidence": 0.0,
+                    "message": "No cattle or buffalo detected in this image. "
+                               "Please upload a clear photo of a bovine animal.",
+                    "gatekeeper_reason": gate_result["reason"],
+                    "gatekeeper_top_class": gate_result["top_class"],
+                })
+        # ─────────────────────────────────────────────────────────────────
         
-        # 1. Run inference (TFLite)
+        # ── BREED INFERENCE (TFLite) ─────────────────────────────────────
         response = clf.predict(img_path)
         
         if "error" in response:
