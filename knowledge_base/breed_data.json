@@ -1,0 +1,371 @@
+[
+    {
+        "breed": "Gir",
+        "animal_type": "Cattle",
+        "regions": "Gujarat",
+        "description": "Indigenous to Gujarat, known for high milk yield and distinctive convex forehead.",
+        "ideal_climate": "Tropical, handles heat well.",
+        "feed_recommendations": "Green fodder (NB-21), concentrates, and ample water.",
+        "health_notes": "Generally resistant to tick-borne diseases. Prone to mastitis if milking hygiene is poor."
+    },
+    {
+        "breed": "Sahiwal",
+        "animal_type": "Cattle",
+        "regions": "Punjab, Haryana",
+        "description": "Originally from Punjab, one of the best dairy breeds in India. Reddish-brown color.",
+        "ideal_climate": "Dry, hot climates.",
+        "feed_recommendations": "Balanced ration of dry fodder (wheat straw), green fodder, and mineral supplements.",
+        "health_notes": "Resistant to tick-borne diseases. Watch for foot-and-mouth disease (FMD)."
+    },
+    {
+        "breed": "Red_Sindhi",
+        "animal_type": "Cattle",
+        "regions": "Odisha, Tamil Nadu, Scattered",
+        "description": "Similar to Sahiwal but smaller. Deep red color. Good milk yield.",
+        "ideal_climate": "Adaptable to various climates.",
+        "feed_recommendations": "Quality roughage and concentrate mixture.",
+        "health_notes": "Hardy breed, generally disease resistant."
+    },
+    {
+        "breed": "Tharparkar",
+        "animal_type": "Cattle",
+        "regions": "Rajasthan",
+        "description": "Dual-purpose breed (milk and draft) from the Thar Desert. White or gray color.",
+        "ideal_climate": "Arid, drought-prone areas.",
+        "feed_recommendations": "Thrives on scarce grazing. Supplement with dry fodder.",
+        "health_notes": "Highly disease resistant and heat tolerant."
+    },
+    {
+        "breed": "Murrah",
+        "animal_type": "Buffalo",
+        "regions": "Haryana, Punjab",
+        "description": "Premium water buffalo breed from Haryana/Punjab. Jet black with tightly curled horns.",
+        "ideal_climate": "Humid and hot climates (needs water for wallowing).",
+        "feed_recommendations": "High-energy diet for milk production. Green fodder, oil cakes.",
+        "health_notes": "Susceptible to heat stress if wallowing is not provided. Watch for hemorrhagic septicemia."
+    },
+    {
+        "breed": "Jaffrabadi",
+        "animal_type": "Buffalo",
+        "regions": "Gujarat",
+        "description": "Heaviest Indian buffalo breed. Massive horns that droop.",
+        "ideal_climate": "Coastal and dry regions of Gujarat.",
+        "feed_recommendations": "Requires significant fodder intake due to size.",
+        "health_notes": "Robust but needs good nutrition to maintain health."
+    },
+    {
+        "breed": "Nili_Ravi",
+        "animal_type": "Buffalo",
+        "regions": "Punjab",
+        "description": "Known as 'Panch Kalyani' due to five white markings. High milk yield.",
+        "ideal_climate": "Riverine areas of Punjab.",
+        "feed_recommendations": "Green fodder, legumes, and plenty of water.",
+        "health_notes": "Generally healthy. Regular deworming recommended."
+    },
+    {
+        "breed": "Surti",
+        "animal_type": "Buffalo",
+        "regions": "Gujarat",
+        "description": "Medium-sized buffalo from Gujarat. Sickle-shaped horns.",
+        "ideal_climate": "Semi-arid regions.",
+        "feed_recommendations": "Standard balanced ration. Efficient feed converter.",
+        "health_notes": "Hardy breed, good for smaller farmers."
+    },
+    {
+        "breed": "Mehsana",
+        "animal_type": "Buffalo",
+        "regions": "Gujarat (Mehsana)",
+        "description": "Cross between Murrah and Surti. Good milk producer.",
+        "ideal_climate": "North Gujarat region.",
+        "feed_recommendations": "Mixed fodder and concentrates.",
+        "health_notes": "Watch for reproductive issues."
+    },
+    {
+        "breed": "Toda",
+        "animal_type": "Buffalo",
+        "regions": "Tamil Nadu (Nilgiris)",
+        "description": "Semi-wild breed from Nilgiris. Distinctive long, curved horns.",
+        "ideal_climate": "High altitude, hilly regions.",
+        "feed_recommendations": "Grazing on natural pastures.",
+        "health_notes": "Very hardy, adapted to harsh mountain conditions."
+    },
+    {
+        "breed": "Banni",
+        "animal_type": "Buffalo",
+        "regions": "Gujarat (Kutch)",
+        "description": "From Kutch, Gujarat. Adapted to night grazing.",
+        "ideal_climate": "Arid, saline environments.",
+        "feed_recommendations": "Grazing on Banni grasslands (halophytic plants).",
+        "health_notes": "Extremely hardy and disease resistant."
+    },
+    {
+        "breed": "Bhadawari",
+        "animal_type": "Buffalo",
+        "regions": "Uttar Pradesh, Madhya Pradesh",
+        "description": "Copper-colored body. Known for high butterfat content in milk.",
+        "ideal_climate": "Ravine areas of Yamuna/Chambal (UP/MP).",
+        "feed_recommendations": "Can survive on low-quality roughage.",
+        "health_notes": "Heat tolerant and disease resistant."
+    },
+    {
+        "breed": "Nagpuri",
+        "animal_type": "Buffalo",
+        "regions": "Maharashtra",
+        "description": "Central Indian breed. Sword-shaped horns.",
+        "ideal_climate": "Hot and dry regions of Maharashtra.",
+        "feed_recommendations": "Dry fodder with some green supplement.",
+        "health_notes": "Resistant to harsh conditions."
+    },
+    {
+        "breed": "Alambadi",
+        "animal_type": "Cattle",
+        "regions": "Tamil Nadu",
+        "description": "Draught breed from Tamil Nadu. Resembles Hallikar.",
+        "ideal_climate": "Hilly and forest areas.",
+        "feed_recommendations": "Grazing in forest areas.",
+        "health_notes": "Hardy draught animal."
+    },
+    {
+        "breed": "Amritmahal",
+        "animal_type": "Cattle",
+        "regions": "Karnataka",
+        "description": "Famous draught breed from Karnataka. Known for speed and endurance.",
+        "ideal_climate": "Dry regions.",
+        "feed_recommendations": "Grazing on natural pastures.",
+        "health_notes": "Very active and fiery temperament."
+    },
+    {
+        "breed": "Ayrshire",
+        "animal_type": "Cattle",
+        "regions": "Exotic / All India",
+        "description": "Exotic dairy breed (Scotland). Red and white markings.",
+        "ideal_climate": "Temperate climates (cool).",
+        "feed_recommendations": "High-quality green fodder and concentrates.",
+        "health_notes": "Susceptible to heat stress and tick-borne diseases in India."
+    },
+    {
+        "breed": "Bargur",
+        "animal_type": "Cattle",
+        "regions": "Tamil Nadu",
+        "description": "Draught breed from Tamil Nadu hills. Red and white speckled.",
+        "ideal_climate": "Hilly terrain.",
+        "feed_recommendations": "Forest grazing.",
+        "health_notes": "Very swift and sure-footed."
+    },
+    {
+        "breed": "Brown_Swiss",
+        "animal_type": "Cattle",
+        "regions": "Exotic / All India",
+        "description": "Exotic dairy breed (Switzerland). Grey-brown color.",
+        "ideal_climate": "Cooler climates or managed housing.",
+        "feed_recommendations": "High-quality balanced ration.",
+        "health_notes": "Better heat tolerance than Holstein but still needs care."
+    },
+    {
+        "breed": "Dangi",
+        "animal_type": "Cattle",
+        "regions": "Maharashtra, Gujarat",
+        "description": "Draught breed from Maharashtra. White with black/red spots.",
+        "ideal_climate": "Heavy rainfall areas (Ghats).",
+        "feed_recommendations": "Rice straw and grazing.",
+        "health_notes": "Skin secretes oil that protects from heavy rain."
+    },
+    {
+        "breed": "Deoni",
+        "animal_type": "Cattle",
+        "regions": "Maharashtra, Karnataka",
+        "description": "Dual-purpose breed from Maharashtra/Karnataka. Resembles Gir.",
+        "ideal_climate": "Semi-arid regions.",
+        "feed_recommendations": "Sorghum and millet residues.",
+        "health_notes": "Hardy and docile."
+    },
+    {
+        "breed": "Guernsey",
+        "animal_type": "Cattle",
+        "regions": "Exotic / All India",
+        "description": "Exotic dairy breed. Fawn and white color. High butterfat.",
+        "ideal_climate": "Temperate.",
+        "feed_recommendations": "Quality dairy ration.",
+        "health_notes": "Moderate heat tolerance."
+    },
+    {
+        "breed": "Hallikar",
+        "animal_type": "Cattle",
+        "regions": "Karnataka",
+        "description": "Premier draught breed of Karnataka. Long, vertical horns.",
+        "ideal_climate": "Semi-arid Deccan plateau.",
+        "feed_recommendations": "Ragi straw and grazing.",
+        "health_notes": "Excellent endurance."
+    },
+    {
+        "breed": "Hariana",
+        "animal_type": "Cattle",
+        "regions": "Haryana, Uttar Pradesh",
+        "description": "Dual-purpose breed from Haryana. White/grey color.",
+        "ideal_climate": "North Indian plains.",
+        "feed_recommendations": "Wheat straw and green fodder.",
+        "health_notes": "Good adaptations to heat."
+    },
+    {
+        "breed": "Holstein_Friesian",
+        "animal_type": "Cattle",
+        "regions": "Exotic / All India",
+        "description": "Exotic breed (Dutch). Black and white. World's highest milk producer.",
+        "ideal_climate": "Cool climates. Needs fans/sprinklers in India.",
+        "feed_recommendations": "High input: quality green fodder, corn silage, heavy concentrates.",
+        "health_notes": "Very susceptible to heat stress, ticks, and mastitis."
+    },
+    {
+        "breed": "Jersey",
+        "animal_type": "Cattle",
+        "regions": "Exotic / All India",
+        "description": "Exotic breed (Channel Islands). Small, fawn-colored.",
+        "ideal_climate": "Adaptable, handles heat better than HF.",
+        "feed_recommendations": "Balanced dairy ration.",
+        "health_notes": "Prone to milk fever."
+    },
+    {
+        "breed": "Kangayam",
+        "animal_type": "Cattle",
+        "regions": "Tamil Nadu",
+        "description": "Draught breed from Tamil Nadu. Grey/white with dark markings.",
+        "ideal_climate": "Dry, drought-prone areas.",
+        "feed_recommendations": "Cholam straw and grazing.",
+        "health_notes": "Very hardy, low maintenance."
+    },
+    {
+        "breed": "Kankrej",
+        "animal_type": "Cattle",
+        "regions": "Gujarat, Rajasthan",
+        "description": "Heaviest Indian breed (Gujarat). Dual-purpose. Large, lyre-shaped horns.",
+        "ideal_climate": "Hot, semi-arid regions.",
+        "feed_recommendations": "Bajra/Jowar straw and grazing.",
+        "health_notes": "Resistant to tick fever and contagious abortion."
+    },
+    {
+        "breed": "Kasargod",
+        "animal_type": "Cattle",
+        "regions": "Kerala",
+        "description": "Dwarf breed from Kerala. Very small size.",
+        "ideal_climate": "High rainfall, coastal areas.",
+        "feed_recommendations": "Kitchen waste and minimal grazing.",
+        "health_notes": "High mineral efficiency."
+    },
+    {
+        "breed": "Kenkatha",
+        "animal_type": "Cattle",
+        "regions": "Uttar Pradesh, Madhya Pradesh",
+        "description": "Draught breed from Bundelkhand. Small, sturdy.",
+        "ideal_climate": "Rocky terrain.",
+        "feed_recommendations": "Poor quality roughage.",
+        "health_notes": "Thrives on poor pastures."
+    },
+    {
+        "breed": "Kherigarh",
+        "animal_type": "Cattle",
+        "regions": "Uttar Pradesh",
+        "description": "Draught breed from UP (Lakhimpur Kheri). White.",
+        "ideal_climate": "Terai region.",
+        "feed_recommendations": "Grazing.",
+        "health_notes": "Active and energetic."
+    },
+    {
+        "breed": "Khillari",
+        "animal_type": "Cattle",
+        "regions": "Maharashtra, Karnataka",
+        "description": "Fast-paced draught breed from Maharashtra.",
+        "ideal_climate": "Dry regions.",
+        "feed_recommendations": "Jowar fodder.",
+        "health_notes": "Very hard hooves, rarely needs shoeing."
+    },
+    {
+        "breed": "Krishna_Valley",
+        "animal_type": "Cattle",
+        "regions": "Karnataka, Maharashtra",
+        "description": "Draught breed from Karnataka/Maharashtra border. Massive build.",
+        "ideal_climate": "Black cotton soil regions.",
+        "feed_recommendations": "Heavy fodder intake.",
+        "health_notes": "Slow worker but powerful."
+    },
+    {
+        "breed": "Malnad_gidda",
+        "animal_type": "Cattle",
+        "regions": "Karnataka",
+        "description": "Dwarf breed from Karnataka (Western Ghats).",
+        "ideal_climate": "Rainy, hilly forests.",
+        "feed_recommendations": "Free grazing in forests.",
+        "health_notes": "Highly disease resistant."
+    },
+    {
+        "breed": "Nagori",
+        "animal_type": "Cattle",
+        "regions": "Rajasthan",
+        "description": "Famous trotting draught breed from Rajasthan.",
+        "ideal_climate": "Desert/arid regions.",
+        "feed_recommendations": "Dry fodder.",
+        "health_notes": "Very alert and agile."
+    },
+    {
+        "breed": "Nimari",
+        "animal_type": "Cattle",
+        "regions": "Madhya Pradesh",
+        "description": "Draught breed from Narmada valley. Red with white patches.",
+        "ideal_climate": "Central India.",
+        "feed_recommendations": "Grazing and crop residues.",
+        "health_notes": "Resembles Gir/Khillari mix."
+    },
+    {
+        "breed": "Ongole",
+        "animal_type": "Cattle",
+        "regions": "Andhra Pradesh",
+        "description": "World-famous dual-purpose breed from Andhra Pradesh. Large, white, muscular.",
+        "ideal_climate": "Coastal and hot climates.",
+        "feed_recommendations": "Paddy straw and grazing.",
+        "health_notes": "Global breeding stock for beef (Brahman cattle)."
+    },
+    {
+        "breed": "Pulikulam",
+        "animal_type": "Cattle",
+        "regions": "Tamil Nadu",
+        "description": "Draught breed from Tamil Nadu (Jallikattu bulls).",
+        "ideal_climate": "Dry regions.",
+        "feed_recommendations": "Grazing.",
+        "health_notes": "Very aggressive and active."
+    },
+    {
+        "breed": "Rathi",
+        "animal_type": "Cattle",
+        "regions": "Rajasthan",
+        "description": "Milch breed from Rajasthan. Triple cross (Sahiwal/Red Sindhi/Tharparkar).",
+        "ideal_climate": "Arid regions.",
+        "feed_recommendations": "Dry fodder and concentrates.",
+        "health_notes": "Efficient converter of feed."
+    },
+    {
+        "breed": "Red_Dane",
+        "animal_type": "Cattle",
+        "regions": "Exotic / All India",
+        "description": "Exotic dairy breed (Denmark). Red color.",
+        "ideal_climate": "Cool/moderate climates.",
+        "feed_recommendations": "High quality dairy ration.",
+        "health_notes": "Requires good management."
+    },
+    {
+        "breed": "Umblachery",
+        "animal_type": "Cattle",
+        "regions": "Tamil Nadu",
+        "description": "Draught breed from Tamil Nadu delta. Small size.",
+        "ideal_climate": "Marshy paddy fields.",
+        "feed_recommendations": "Paddy straw.",
+        "health_notes": "Calves are red at birth, turn grey later."
+    },
+    {
+        "breed": "Vechur",
+        "animal_type": "Cattle",
+        "regions": "Kerala",
+        "description": "Smallest cattle breed in the world (Kerala).",
+        "ideal_climate": "Hot, humid tropics.",
+        "feed_recommendations": "Minimal feed, kitchen waste.",
+        "health_notes": "Extremely disease resistant (milk has medicinal value claims)."
+    }
+]

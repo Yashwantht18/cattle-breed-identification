@@ -1,7 +1,6 @@
 flask
 flask-cors
-torch
-torchvision
+tensorflow
 numpy
 opencv-python
 pillow

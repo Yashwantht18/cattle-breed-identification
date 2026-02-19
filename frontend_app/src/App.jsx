@@ -93,7 +93,7 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          Identify Indian Cattle & Buffalo Breeds with AI Explainability
+          Identify Indian Cattle &amp; Buffalo Breeds with AI Explainability
         </motion.p>
       </header>
 
@@ -125,7 +125,7 @@ function App() {
             mode === 'upload' ? (
               <label className="upload-zone">
                 <Upload size={48} className="text-primary" />
-                <span>Drag & drop or click to upload bovine image</span>
+                <span>Drag &amp; drop or click to upload bovine image</span>
                 <input type="file" hidden onChange={handleFileChange} accept="image/*" />
               </label>
             ) : (
@@ -204,16 +204,38 @@ function App() {
                 animate={{ opacity: 1, scale: 1 }}
               >
                 {!results.is_bovine ? (
+                  /* ── Truly rejected: confidence < 5% ── */
                   <div className="not-bovine-state" style={{ textAlign: 'center', padding: '2rem' }}>
                     <AlertCircle size={64} color="#f59e0b" style={{ marginBottom: '1rem' }} />
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Not Detected</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>This image does not appear to be an Indian Cattle or Buffalo breed. Please ensure the animal is clearly visible.</p>
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Detection Unclear</h2>
+                    <p style={{ color: 'var(--text-muted)' }}>
+                      The model could not find a recognisable bovine pattern.<br />
+                      <strong>Tips:</strong> Ensure good lighting, capture the side profile, and avoid blurry images.
+                    </p>
                     <button className="btn-secondary" onClick={reset} style={{ marginTop: '1.5rem', marginInline: 'auto' }}>
                       <RefreshCw size={18} /> Try Another Image
                     </button>
                   </div>
                 ) : (
+                  /* ── Valid prediction ── */
                   <>
+                    {/* Low confidence warning banner (10%–25% zone) */}
+                    {results.low_confidence && (
+                      <div style={{
+                        display: 'flex', alignItems: 'center', gap: '0.6rem',
+                        background: 'rgba(245,158,11,0.12)',
+                        border: '1px solid rgba(245,158,11,0.5)',
+                        borderRadius: '0.5rem', padding: '0.75rem 1rem', marginBottom: '1rem',
+                        color: '#f59e0b', fontSize: '0.88rem'
+                      }}>
+                        <AlertCircle size={18} style={{ flexShrink: 0 }} />
+                        <span>
+                          <strong>Low confidence ({results.confidence.toFixed(1)}%)</strong> — showing best guess.
+                          Accuracy will improve once the new EfficientNetV2S model finishes training.
+                        </span>
+                      </div>
+                    )}
+
                     <div className="top-prediction">
                       <div className="animal-type-badge">
                         {results.animal_type}
@@ -246,13 +268,44 @@ function App() {
                       ))}
                     </div>
 
+                    <div className="knowledge-section" style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '0.5rem' }}>
+                      <h3 className="section-title">Breed Information</h3>
+                      {results.knowledge ? (
+                        <>
+                          <p style={{ marginBottom: '0.5rem' }}><strong>Description:</strong> {results.knowledge.description}</p>
+                          <p style={{ marginBottom: '0.5rem' }}><strong>Ideal Climate:</strong> {results.knowledge.ideal_climate}</p>
+                          <p style={{ marginBottom: '1rem' }}><strong>Region:</strong> {results.knowledge.regions}</p>
+
+                          <div className="info-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                            <div className="info-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '0.5rem' }}>
+                              <h4 style={{ color: 'var(--text-accent)', marginBottom: '0.5rem' }}>Feed Recommendations</h4>
+                              <p style={{ fontSize: '0.9rem' }}>{results.knowledge.feed_recommendations}</p>
+                            </div>
+                            <div className="info-card" style={{ background: 'rgba(255,255,255,0.05)', padding: '0.8rem', borderRadius: '0.5rem' }}>
+                              <h4 style={{ color: 'var(--text-accent)', marginBottom: '0.5rem' }}>Health Notes</h4>
+                              <p style={{ fontSize: '0.9rem' }}>{results.knowledge.health_notes}</p>
+                            </div>
+                          </div>
+                          <p className="disclaimer" style={{ marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                            * This information is for awareness only and does not replace veterinary advice.
+                          </p>
+                        </>
+                      ) : (
+                        <p>No detailed information available for this breed.</p>
+                      )}
+                    </div>
+
                     <div className="heatmap-section">
                       <h3 className="section-title">Explainable AI (Grad-CAM)</h3>
                       <p className="section-desc">
                         High-intensity regions indicate areas the model focused on for identification:
                       </p>
                       <div className="heatmap-container">
-                        <img src={results.heatmap} alt="Grad-CAM" className="heatmap-img" />
+                        {results.heatmap ? (
+                          <img src={results.heatmap} alt="Grad-CAM" className="heatmap-img" />
+                        ) : (
+                          <p>Explanation not available for this prediction.</p>
+                        )}
                       </div>
                     </div>
                   </>
@@ -267,4 +320,3 @@ function App() {
 }
 
 export default App;
-
