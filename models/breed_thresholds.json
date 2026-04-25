@@ -1,0 +1,249 @@
+{
+  "_comment": "Adaptive confidence thresholds per breed based on training image count.",
+  "_tiers": {
+    "HIGH (>300 train images)": "low_confidence_threshold = 40% — model has enough data to be strict",
+    "MED  (100-300 images)": "low_confidence_threshold = 28% — moderate strictness",
+    "LOW  (<100 images)": "low_confidence_threshold = 18% — lenient; rare breeds rarely reach high confidence"
+  },
+  "_logic": "If model confidence < breed_threshold => low_confidence=True (UI shows warning). Thresholds are AFTER temperature sharpening.",
+  "Murrah": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Jaffrabadi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Toda": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Nili_Ravi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Nagpuri": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "gojri": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Sahiwal": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "marathwada": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "chilika": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Bargur": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Gir": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Banni": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Holstein_Friesian": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Surti": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Bhadawari": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "pandharpuri": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Mehsana": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Ayrshire": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Brown_Swiss": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Tharparkar": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Jersey": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Chhattisgarhi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Hallikar": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Kankrej": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Ongole": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Red_Dane": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Red_Sindhi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Rathi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Vechur": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Krishna_Valley": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Hariana": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "kalahandi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Pulikulam": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Guernsey": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "luit": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Malnad_gidda": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Khillari": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Alambadi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Amritmahal": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Deoni": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Kasargod": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Dangi": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Nimari": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Kangayam": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Nagori": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Umblachery": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Kenkatha": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  },
+  "Kherigarh": {
+    "train_count": 500,
+    "tier": "HIGH",
+    "low_conf_threshold": 40
+  }
+}

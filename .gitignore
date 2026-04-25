@@ -9,7 +9,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 venv
-models
 
 node_modules
 dist

@@ -134,7 +134,7 @@ class TFLiteBovineClassifier:
 
     def predict(self, image_path, confidence_threshold=10.0, use_tta=True):
         if not self.interpreter:
-            return {"error": "Model not loaded"}, None
+            return {"error": "Model not loaded"}
 
         start_time = time.time()
         
