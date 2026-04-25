@@ -52,7 +52,7 @@ function App() {
     setError(null);
 
     try {
-        const apiEndpoint = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/predict` : '/api/predict';
+        const apiEndpoint = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/predict` : '/api/predict';
       
       let response;
       if (typeof file === 'string') {
