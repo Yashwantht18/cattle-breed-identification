@@ -6,3 +6,4 @@ opencv-python
 pillow
 matplotlib
 scikit-learn
+gunicorn

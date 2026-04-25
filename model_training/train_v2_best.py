@@ -57,15 +57,20 @@ TEST_DIR  = os.path.join(DATA, 'test')
 # ---------------------------------------------------------------------------
 # HYPER-PARAMETERS  (tuned for this dataset: 41 classes, ~4k training images)
 # ---------------------------------------------------------------------------
-IMG_SIZE      = 224    # EfficientNetV2S native; increase to 260 if GPU allows
-BATCH_SIZE    = 16     # keep low to fit on CPU/low-VRAM GPU; 32 if >6 GB VRAM
+IMG_SIZE      = 260    # Increased from 224: captures finer horn/coat detail
+BATCH_SIZE    = 16     # keep low to fit on CPU/low-VRAM GPU; 32 if > 6 GB VRAM
 PHASE1_LR     = 1e-3   # head-only training learning rate
 PHASE2_LR     = 5e-5   # fine-tuning learning rate (must be much lower)
-PHASE1_EPOCHS = 20     # epochs for head training
-PHASE2_EPOCHS = 20     # epochs for fine-tuning
+PHASE1_EPOCHS = 25     # slightly more epochs for larger image size
+PHASE2_EPOCHS = 25
 LABEL_SMOOTH  = 0.1    # label smoothing factor
-PATIENCE      = 8      # early-stopping patience (val_accuracy)
+PATIENCE      = 10     # early-stopping patience (val_accuracy)
 SEED          = 42
+
+# Oversample floor: minority classes with fewer training images than this
+# will have their paths repeated so the model sees them more often.
+# Murrah has 106 images — floor at 200 means it gets ~2x repetition.
+OVERSAMPLE_FLOOR = 200
 
 tf.random.set_seed(SEED)
 np.random.seed(SEED)
@@ -87,17 +92,42 @@ except Exception as exc:
 
 VALID_EXTS = {'.jpg', '.jpeg', '.png', '.bmp', '.webp'}
 
-def collect_paths_labels(directory: str, class_to_idx: dict):
-    """Walk directory and return (paths, integer labels) lists."""
+def collect_paths_labels(directory: str, class_to_idx: dict,
+                         oversample_floor: int = 0):
+    """
+    Walk directory and return (paths, integer labels) lists.
+
+    oversample_floor: if > 0, minority classes with fewer images than this
+    threshold will have their file list repeated (with random cycling) until
+    they reach the floor. This balances training frequency without
+    requiring additional real images.
+    """
     paths, labels = [], []
     for cls_name, idx in class_to_idx.items():
         cls_dir = os.path.join(directory, cls_name)
         if not os.path.isdir(cls_dir):
             continue
-        for fname in os.listdir(cls_dir):
-            if os.path.splitext(fname)[1].lower() in VALID_EXTS:
-                paths.append(os.path.join(cls_dir, fname))
-                labels.append(idx)
+        cls_files = [
+            os.path.join(cls_dir, f)
+            for f in os.listdir(cls_dir)
+            if os.path.splitext(f)[1].lower() in VALID_EXTS
+        ]
+        if not cls_files:
+            continue
+
+        # Oversample if this class is below the floor
+        if oversample_floor > 0 and len(cls_files) < oversample_floor:
+            import math, random
+            orig_count = len(cls_files)
+            rng = random.Random(SEED + idx)   # deterministic but per-class
+            repeats = math.ceil(oversample_floor / orig_count)
+            expanded = (cls_files * repeats)[:oversample_floor]
+            rng.shuffle(expanded)
+            cls_files = expanded
+            print(f"  [OVERSAMPLE] {cls_name}: {orig_count} -> {len(cls_files)} samples")
+
+        paths.extend(cls_files)
+        labels.extend([idx] * len(cls_files))
     return paths, labels
 
 # ===========================================================================
@@ -113,20 +143,37 @@ def decode_and_resize(path, label):
 
 
 def augment(img, label):
-    """Randomised augmentation applied only during training."""
+    """
+    Stronger randomised augmentation applied only during training.
+
+    Key additions vs v1:
+    - Wider brightness/contrast/saturation range to handle cattle in
+      bright sunlight vs shade (critical for dark breeds like Murrah)
+    - Random 90-degree rotations simulate various photograph orientations
+    - Random cutout (coarse dropout) forces the model to learn whole-body
+      features rather than latching onto a single patch (e.g. coat colour)
+    """
+    # Geometric transforms
     img = tf.image.random_flip_left_right(img)
-    img = tf.image.random_flip_up_down(img)
-    img = tf.image.random_brightness(img, max_delta=0.25)
-    img = tf.image.random_contrast(img, lower=0.75, upper=1.25)
-    img = tf.image.random_saturation(img, lower=0.75, upper=1.25)
-    img = tf.image.random_hue(img, max_delta=0.08)
-    # Random zoom via crop + resize
-    scale = tf.random.uniform([], 0.75, 1.0)
+    # Random 0/90/180/270 degree rotation
+    k = tf.random.uniform([], 0, 4, dtype=tf.int32)
+    img = tf.image.rot90(img, k)
+    # Random zoom via crop + resize (wider range than before)
+    scale = tf.random.uniform([], 0.70, 1.0)
     new_h = tf.cast(tf.cast(IMG_SIZE, tf.float32) * scale, tf.int32)
     new_w = new_h
     img   = tf.image.resize_with_crop_or_pad(
                 tf.image.resize(img, [new_h, new_w]), IMG_SIZE, IMG_SIZE)
-    img   = tf.clip_by_value(img, 0.0, 255.0)
+
+    # Colour / photometric transforms
+    # Wider range: essential for dark-coated breeds (Murrah, Nagpuri, Bhadawari)
+    # in variable Indian field lighting conditions
+    img = tf.image.random_brightness(img, max_delta=0.40)
+    img = tf.image.random_contrast(img, lower=0.60, upper=1.40)
+    img = tf.image.random_saturation(img, lower=0.60, upper=1.40)
+    img = tf.image.random_hue(img, max_delta=0.10)
+
+    img = tf.clip_by_value(img, 0.0, 255.0)
     return img, label
 
 
@@ -354,6 +401,27 @@ def convert_to_tflite(model, train_ds):
     except Exception as exc2:
         print(f"[ERROR] TFLite conversion failed: {exc2}")
 
+    # -------------------------------------------------------------------------
+    # ⚠️  CRITICAL POST-TRAINING NOTICE  ⚠️
+    # -------------------------------------------------------------------------
+    # This model was built with EfficientNetV2S(include_preprocessing=True).
+    # That means the Keras/TFLite model INCLUDES an internal rescaling layer
+    # that expects RAW [0, 255] float32 pixels as input — NOT [0, 1] values.
+    #
+    # After retraining, you MUST update inference/tflite_inference.py:
+    #   preprocess_image():  REMOVE the line  `img_array = img_array / 255.0`
+    #   TTA flip tensor:     REMOVE the        `/ 255.0` in arr_flip
+    #
+    # The current model on disk was trained with an OLDER script that used
+    # rescale=1./255, so the existing inference code has /255.0 in place.
+    # Once you replace optimized_model.tflite with this retrained model,
+    # remove those two /255.0 lines or predictions will be garbage.
+    # -------------------------------------------------------------------------
+    print("\n[POST-TRAINING REMINDER]")
+    print("  This model expects raw [0-255] input (include_preprocessing=True).")
+    print("  Update inference/tflite_inference.py: REMOVE the /255.0 divisions.")
+    print("  See comments in convert_to_tflite() for details.")
+
 # ===========================================================================
 # 7. MAIN  (entry point)
 # ===========================================================================
@@ -379,19 +447,29 @@ def train():
     print(f"[SAVED] classes.txt -> {classes_path}")
 
     # --- Collect file paths ---
-    train_paths, train_labels = collect_paths_labels(TRAIN_DIR, class_to_idx)
+    # Training uses oversampling so minority breeds appear more often.
+    # Validation / test do NOT oversample (must reflect true distribution).
+    train_paths, train_labels = collect_paths_labels(
+        TRAIN_DIR, class_to_idx, oversample_floor=OVERSAMPLE_FLOOR)
     valid_paths, valid_labels = collect_paths_labels(VALID_DIR, class_to_idx)
     test_paths,  test_labels  = collect_paths_labels(TEST_DIR,  class_to_idx)
     print(f"[DATA]  train={len(train_paths)}  valid={len(valid_paths)}  test={len(test_paths)}")
 
-    # --- Class weights (balance the imbalanced dataset) ---
+    # --- Class weights ---
+    # Use original (pre-oversample) labels for weight computation so that
+    # oversampled classes don't get artificially low weights.
+    orig_train_paths, orig_train_labels = collect_paths_labels(TRAIN_DIR, class_to_idx)
     raw_weights = compute_class_weight(
         class_weight='balanced',
         classes=np.arange(num_classes),
-        y=train_labels,
+        y=orig_train_labels,
     )
-    class_weights = {i: float(w) for i, w in enumerate(raw_weights)}
-    print(f"[INFO]  class_weight range: {min(raw_weights):.2f} - {max(raw_weights):.2f}")
+    # Square the weights for stronger minority emphasis:
+    # A class with raw_weight=4.0 becomes 16.0 — the model is penalised much
+    # harder for misclassifying rare breeds (e.g. Kherigarh, Kenkatha, Murrah)
+    squared_weights = np.sqrt(raw_weights)   # sqrt balances aggressiveness
+    class_weights = {i: float(w) for i, w in enumerate(squared_weights)}
+    print(f"[INFO]  class_weight range (sqrt): {min(squared_weights):.2f} - {max(squared_weights):.2f}")
 
     # --- Build tf.data datasets ---
     train_ds = build_tf_dataset(train_paths, train_labels, num_classes, training=True)

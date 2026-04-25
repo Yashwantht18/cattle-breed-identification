@@ -52,13 +52,15 @@ function App() {
     setError(null);
 
     try {
+        const apiEndpoint = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/predict` : '/api/predict';
+      
       let response;
       if (typeof file === 'string') {
-        response = await axios.post('/api/predict', { image: file });
+        response = await axios.post(apiEndpoint, { image: file });
       } else {
         const formData = new FormData();
         formData.append('image', file);
-        response = await axios.post('/api/predict', formData, {
+        response = await axios.post(apiEndpoint, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
@@ -231,7 +233,7 @@ function App() {
                         <AlertCircle size={18} style={{ flexShrink: 0 }} />
                         <span>
                           <strong>Low confidence ({results.confidence.toFixed(1)}%)</strong> — showing best guess.
-                          Accuracy will improve once the new EfficientNetV2S model finishes training.
+                          Ensure good lighting, direct angles, and try another photo if needed.
                         </span>
                       </div>
                     )}

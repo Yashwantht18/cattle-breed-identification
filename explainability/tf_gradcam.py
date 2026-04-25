@@ -3,83 +3,124 @@ import tensorflow as tf
 import numpy as np
 import cv2
 
+
 class TFGradCAM:
-    def __init__(self, model_path, last_conv_layer_name=None):
-        full_model = tf.keras.models.load_model(model_path)
-        
-        # Check if the model is wrapped in Sequential and has a functional base model as first layer
-        # This matches our training script structure: Sequential([base_model, pooling, dropout, dense])
-        if isinstance(full_model.layers[0], tf.keras.Model):
-            self.base_model = full_model.layers[0]
-            self.classifier_layers = full_model.layers[1:]
-        else:
-            self.base_model = full_model
-            self.classifier_layers = []
+    """
+    Grad-CAM for a Functional model with a nested backbone (MobileNetV2, EfficientNet, etc.)
 
-        if last_conv_layer_name is None:
-            # For MobileNetV2, the last relevant conv layer is usually 'Out_relu' or similar
-            # Iterating to find the last Conv2D or ReLU
-            for layer in reversed(self.base_model.layers):
-                if isinstance(layer, tf.keras.layers.Conv2D):
-                    last_conv_layer_name = layer.name
-                    break
-        
-        print(f"Using layer {last_conv_layer_name} for Grad-CAM")
-        self.last_conv_layer_name = last_conv_layer_name
-        
-        # Create a model that maps input -> [last_conv_output, prediction]
-        # We need to reconstruct the forward pass
-        last_conv_layer = self.base_model.get_layer(self.last_conv_layer_name)
-        
-        # Model 1: Input -> Last Conv
-        self.conv_model = tf.keras.Model(self.base_model.inputs, last_conv_layer.output)
-        
-        # Model 2: Last Conv -> Prediction
-        # This is tricky with functional API if we don't rebuild. 
-        # Easier approach: simple Grad-CAM using gradient of output wrt conv layer
-        # But we need the whole chain.
-        
-        # Let's use the `tf.GradientTape` on the full model, but watch the intermediate tensor.
-        self.full_model = full_model
+    Architecture: Input → Rescaling → backbone(4D) → GAP → BN → Dropout → Dense → ... → softmax
+    
+    Strategy (avoids nested-model graph KeyError):
+      1. Extract the Rescaling layer, backbone, and head layers separately.
+      2. In compute_heatmap:
+         a. Run input through Rescaling.
+         b. Run through backbone to get 4D feature map.
+         c. tape.watch(feature_map) — then run head layers on top of it.
+         d. Gradient of class score w.r.t. feature map → Grad-CAM heatmap.
+      
+      This works because the tape tracks the forward path from the watched
+      feature_map tensor through the head layers, without needing to trace
+      across model boundaries in a Functional graph.
+    """
 
+    def __init__(self, model_path):
+        full_model = tf.keras.models.load_model(model_path, compile=False)
+
+        self.rescaling_layer = None
+        self.backbone        = None
+        self.head_layers     = []
+        backbone_found       = False
+
+        for layer in full_model.layers:
+            if isinstance(layer, tf.keras.layers.InputLayer):
+                continue
+            elif isinstance(layer, tf.keras.layers.Rescaling):
+                self.rescaling_layer = layer
+                print(f"[Grad-CAM] Rescaling layer: '{layer.name}'  "
+                      f"scale={layer.scale}, offset={layer.offset}")
+            elif isinstance(layer, tf.keras.Model):
+                self.backbone = layer
+                backbone_found = True
+                print(f"[Grad-CAM] Backbone: '{layer.name}'  "
+                      f"output_shape={layer.output_shape}")
+            elif backbone_found:
+                self.head_layers.append(layer)
+
+        if self.backbone is None:
+            raise ValueError("No backbone sub-model found in the model.")
+
+        print(f"[Grad-CAM] Head layers: {[l.name for l in self.head_layers]}")
+        print(f"[Grad-CAM] Initialised successfully.")
+
+    # ------------------------------------------------------------------
     def compute_heatmap(self, img_array, pred_index=None):
+        """
+        img_array : np.ndarray  shape (1, H, W, 3), pixels in [0, 1].
+        Returns   : 2-D float32 numpy array in [0, 1].
+        """
+        img = tf.cast(img_array, tf.float32)
+
+        # 1. Rescale to backbone's expected range ([-1, 1] for MobileNetV2)
+        if self.rescaling_layer is not None:
+            rescaled = self.rescaling_layer(img, training=False)
+        else:
+            rescaled = img
+
+        # 2. Quick forward pass to determine predicted class if not given
+        if pred_index is None:
+            feat_q = self.backbone(rescaled, training=False)
+            x_q    = feat_q
+            for layer in self.head_layers:
+                x_q = layer(x_q, training=False)
+            pred_index = int(tf.argmax(x_q[0]))
+
+        # 3. Grad-CAM forward pass
+        #    tape.watch is called on feature_map (a computed tensor, not a variable).
+        #    Since class_score is then computed FROM feature_map through head_layers,
+        #    the gradient d(class_score)/d(feature_map) can be computed.
         with tf.GradientTape() as tape:
-            # 1. Get the output of the last convolutional layer
-            conv_outputs = self.conv_model(img_array)
-            tape.watch(conv_outputs)
-            
-            # 2. Pass this output through the rest of the classifier layers
-            x = conv_outputs
-            # Apply global average pooling which might be implicitly done by MobileNetV2 base? 
-            # No, in our training script: Sequential([base_model, pooling, dropout, dense])
-            # But wait, base_model (MobileNetV2) output is 4D (batch, 7, 7, 1280).
-            # So we need to apply the subsequent layers in order.
-            
-            for layer in self.classifier_layers:
-                x = layer(x)
-            
-            predictions = x
-            
-            if pred_index is None:
-                pred_index = tf.argmax(predictions[0])
-            
-            class_channel = predictions[:, pred_index]
+            feature_map = self.backbone(rescaled, training=False)  # (1, H, W, C)
+            tape.watch(feature_map)
 
-        grads = tape.gradient(class_channel, conv_outputs)
-        pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+            x = feature_map
+            for layer in self.head_layers:
+                x = layer(x, training=False)
 
-        conv_outputs = conv_outputs[0]
-        heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
-        heatmap = tf.squeeze(heatmap)
+            class_score = x[:, pred_index]  # scalar
 
-        heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
-        return heatmap.numpy()
+        grads = tape.gradient(class_score, feature_map)  # (1, H, W, C)
 
-def apply_heatmap(heatmap, original_img, alpha=0.4):
-    heatmap = cv2.resize(heatmap, (original_img.shape[1], original_img.shape[0]))
-    heatmap = np.uint8(255 * heatmap)
-    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-    
-    superimposed_img = heatmap * alpha + original_img
-    
-    return np.clip(superimposed_img, 0, 255).astype(np.uint8)
+        if grads is None:
+            print("[Grad-CAM] WARNING: gradient is None — returning blank heatmap.")
+            h, w = feature_map.shape[1], feature_map.shape[2]
+            return np.zeros((h, w), dtype=np.float32)
+
+        # 4. Pool gradients across spatial dims → per-channel importance weights
+        pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))   # (C,)
+
+        # 5. Weight each feature map channel and average → spatial heatmap
+        weighted = feature_map[0] * pooled_grads               # (H, W, C)
+        heatmap  = tf.reduce_mean(weighted, axis=-1)            # (H, W)
+
+        # 6. ReLU + normalise to [0, 1]
+        heatmap = tf.maximum(heatmap, 0)
+        max_val = tf.reduce_max(heatmap)
+
+        if max_val == 0:
+            return np.zeros(heatmap.shape, dtype=np.float32)
+
+        return (heatmap / max_val).numpy()
+
+
+# -----------------------------------------------------------------------
+def apply_heatmap(heatmap, original_img, alpha=0.45):
+    """
+    Overlay a Grad-CAM heatmap (float [0,1]) on an original BGR image (cv2).
+    Returns a blended BGR uint8 image.
+    """
+    h, w = original_img.shape[:2]
+    heatmap_r = cv2.resize(heatmap, (w, h))
+    heatmap_u = np.uint8(255 * heatmap_r)
+    colored   = cv2.applyColorMap(heatmap_u, cv2.COLORMAP_JET)  # blue=low, red=high
+    blended   = colored * alpha + original_img * (1.0 - alpha)
+    return np.clip(blended, 0, 255).astype(np.uint8)

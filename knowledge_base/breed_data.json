@@ -47,11 +47,11 @@
     {
         "breed": "Jaffrabadi",
         "animal_type": "Buffalo",
-        "regions": "Gujarat",
-        "description": "Heaviest Indian buffalo breed. Massive horns that droop.",
-        "ideal_climate": "Coastal and dry regions of Gujarat.",
-        "feed_recommendations": "Requires significant fodder intake due to size.",
-        "health_notes": "Robust but needs good nutrition to maintain health."
+        "regions": "Gujarat (Gir forest and Saurashtra region)",
+        "description": "The heaviest Indian buffalo breed, originating from the Gir forest area of Gujarat. Jet black coat with an extremely massive, deep-chested body. Key identifier: large, thick horns that droop downward from the poll then curve upward at the tips — however this feature is hidden when the animal is grazing or the head is down. When horns are not visible, Jaffrabadi can be confused with Murrah (which has tightly coiled backward horns) or Nagpuri (sword-shaped horns). Distinguishing body features: heavier dewlap, broader forehead, and significantly larger overall body mass than Murrah.",
+        "ideal_climate": "Coastal and semi-arid regions of Gujarat. Tolerates heat well.",
+        "feed_recommendations": "Requires very high daily fodder intake due to large body size. Green fodder, dry fodder, and oil cake supplements essential for milk production.",
+        "health_notes": "Robust and disease resistant. Needs good nutrition to sustain heavy body mass. Watch for metabolic disorders if feed quality drops. Regular deworming recommended."
     },
     {
         "breed": "Nili_Ravi",
@@ -367,5 +367,68 @@
         "ideal_climate": "Hot, humid tropics.",
         "feed_recommendations": "Minimal feed, kitchen waste.",
         "health_notes": "Extremely disease resistant (milk has medicinal value claims)."
+    },
+    {
+        "breed": "Chhattisgarhi",
+        "animal_type": "Cattle",
+        "regions": "Chhattisgarh",
+        "description": "Indigenous draught breed of Chhattisgarh. Medium-sized, compact body with grey or white coat. Used extensively for agricultural work in the Chhattisgarh plains.",
+        "ideal_climate": "Tropical, monsoon regions of central India.",
+        "feed_recommendations": "Rice straw, green fodder, and crop residues.",
+        "health_notes": "Hardy and disease resistant. Adapted to humid conditions."
+    },
+    {
+        "breed": "chilika",
+        "animal_type": "Buffalo",
+        "regions": "Odisha (Chilika Lake region)",
+        "description": "Unique buffalo breed native to the Chilika Lake wetlands of Odisha. Smaller body size, adapted to marshy and saline environments. Endangered breed.",
+        "ideal_climate": "Coastal wetlands, marshy and saline environments.",
+        "feed_recommendations": "Aquatic vegetation, paddy straw, and wetland grasses.",
+        "health_notes": "Adapted to waterlogged terrain. Susceptible to respiratory infections in dry climates."
+    },
+    {
+        "breed": "gojri",
+        "animal_type": "Buffalo",
+        "regions": "Jammu & Kashmir, Himachal Pradesh",
+        "description": "Migratory buffalo breed reared by Gujjar and Bakarwal communities in the Himalayas. Medium-sized, black-coated, and highly adapted to high-altitude conditions.",
+        "ideal_climate": "High altitude, cool and cold mountain regions.",
+        "feed_recommendations": "Alpine pasture grasses, seasonal green fodder.",
+        "health_notes": "Extremely cold-hardy. Regular check for internal parasites during migration."
+    },
+    {
+        "breed": "kalahandi",
+        "animal_type": "Buffalo",
+        "regions": "Odisha (Kalahandi district)",
+        "description": "Local buffalo breed from the Kalahandi-Bolangir-Koraput belt of Odisha. Medium built, dark-coloured. Maintained by tribal communities for draft and milk.",
+        "ideal_climate": "Tropical, semi-arid to sub-humid regions.",
+        "feed_recommendations": "Forest grasses, paddy straw, and crop residues.",
+        "health_notes": "Hardy under low-input farming systems. Watch for nutritional deficiencies."
+    },
+    {
+        "breed": "luit",
+        "animal_type": "Buffalo",
+        "regions": "Assam",
+        "description": "Also known as Swamp Buffalo of Assam, found along the Brahmaputra (Luit) river basin. Smaller body, lighter built than Indian river buffalo. Used primarily for draft.",
+        "ideal_climate": "Flood-prone, humid tropical river plains.",
+        "feed_recommendations": "Riparian grasses, paddy straw, and aquatic vegetation.",
+        "health_notes": "Susceptible to Foot and Mouth Disease. Regular vaccination recommended."
+    },
+    {
+        "breed": "marathwada",
+        "animal_type": "Buffalo",
+        "regions": "Maharashtra (Marathwada region)",
+        "description": "A buffalo population distinct to the Marathwada region of Maharashtra. Dark-coated with moderate milk yield. Dual-purpose for milk and draught.",
+        "ideal_climate": "Semi-arid, dry tropical regions of central Maharashtra.",
+        "feed_recommendations": "Jowar straw, cotton seed cake, and available green fodder.",
+        "health_notes": "Tolerant of water scarcity. Watch for heat stress during peak summer."
+    },
+    {
+        "breed": "pandharpuri",
+        "animal_type": "Buffalo",
+        "regions": "Maharashtra (Solapur, Pandharpur region)",
+        "description": "Buffalo breed from the Pandharpur area of Maharashtra. Known for long, curved horns and good milk yield. Considered a improved local breed.",
+        "ideal_climate": "Semi-arid regions of Maharashtra.",
+        "feed_recommendations": "Jowar fodder, green legumes, and concentrates.",
+        "health_notes": "Good milk fat percentage. Susceptible to heat stress — ensure wallowing access."
     }
 ]
