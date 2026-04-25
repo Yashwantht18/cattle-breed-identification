@@ -54,8 +54,8 @@ def get_classifier():
         except Exception as e:
             print(f"Failed to load Grad-CAM model: {e}")
 
-    # Initialize gatekeeper (lazy load, fail-open) and NOT on Render free tier
-    if gatekeeper is None and not is_render:
+    # Initialize gatekeeper (lazy load, fail-open)
+    if gatekeeper is None:
         try:
             gatekeeper = ImageNetGatekeeper()
         except Exception as e:
