@@ -43,17 +43,19 @@ def get_classifier():
             classes_path=CLASS_PATH,
             knowledge_path=KNOWLEDGE_PATH
         )
-    
-    # Initialize Grad-CAM if Keras model exists
-    if gradcam is None and os.path.exists(MODEL_KERAS_PATH):
+    # On Free Tier Cloud (Render), we restrict to TFLite only (512MB limit)
+    is_render = os.environ.get('RENDER') == 'true' or os.environ.get('RENDER') == '1' or 'RENDER' in os.environ
+
+    # Initialize Grad-CAM if Keras model exists and NOT on Render free tier
+    if gradcam is None and os.path.exists(MODEL_KERAS_PATH) and not is_render:
         try:
             print(f"Initializing Grad-CAM with {MODEL_KERAS_PATH}")
             gradcam = TFGradCAM(MODEL_KERAS_PATH)
         except Exception as e:
             print(f"Failed to load Grad-CAM model: {e}")
 
-    # Initialize gatekeeper (lazy load, fail-open)
-    if gatekeeper is None:
+    # Initialize gatekeeper (lazy load, fail-open) and NOT on Render free tier
+    if gatekeeper is None and not is_render:
         try:
             gatekeeper = ImageNetGatekeeper()
         except Exception as e:
